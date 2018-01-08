@@ -6,17 +6,17 @@ requires = [
 ]
 
 setup(
-    name='clts',
+    name='CLTS',
     version='0.0',
-    description='clts',
+    description='Cross-Linguistic Transcription Systems',
     classifiers=[
         "Programming Language :: Python",
         "Framework :: Pyramid",
         "Topic :: Internet :: WWW/HTTP",
         "Topic :: Internet :: WWW/HTTP :: WSGI :: Application",
     ],
-    author='',
-    author_email='',
+    author='Johann-Mattis List',
+    author_email='mattis.list@lingpy.org',
     url='',
     keywords='web pyramid pylons',
     packages=find_packages(),

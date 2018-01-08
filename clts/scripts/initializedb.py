@@ -12,6 +12,7 @@ from clts import models
 
 from pyclts.util import data_path, pkg_path
 from clldutils.dsv import reader
+from clldutils.misc import slug
 
 import os
 
@@ -21,7 +22,23 @@ def main(args):
     for rec in Database.from_file(
             pkg_path('references', 'references.bib'), lowercase=False):
         source = data.add(common.Source, rec.id, _obj=bibtex2source(rec))
-
+    
+    dataset = common.Dataset(
+        id=clts.__name__,
+        name="CLTS",
+        publisher_name="Max Planck Institute for the Science of Human History",
+        publisher_place="Jena",
+        publisher_url="http://www.shh.mpg.de",
+        license="http://creativecommons.org/licenses/by/4.0/",
+        contact='clts@shh.mpg.de',
+        domain='clts.clld.org',
+        jsondata={
+            'license_icon': 'cc-by.png',
+            'license_name': 'Creative Commons Attribution 4.0 International License'})
+    DBSession.add(dataset)
+    for i, name in enumerate(['Johann-Mattis List', 'Cormac Anderson', 'Tiago Tresoldi', 'Robert Forkel']):
+        c = common.Contributor(id=slug(name), name=name)
+        dataset.editors.append(common.Editor(contributor=c, ord=i))
 
     for i, line in enumerate(reader(data_path('sounds.tsv'), delimiter='\t',
             namedtuples=True)):
@@ -93,8 +110,6 @@ def main(args):
             visited.add(key)
     print('-')
 
-    dataset = common.Dataset(id=clts.__name__, domain='clts.clld.org')
-    DBSession.add(dataset)
 
 
 def prime_cache(args):
