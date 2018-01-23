@@ -32,6 +32,7 @@ class SoundSegments(Parameters):
     def col_defs(self):
         return [
             Col(self, 'grapheme', sTitle='Grapheme'),
+            Col(self, 'unicode', sTitle="Unicode"),
             LinkCol(self, 'name'),
             Col(self, 'aliases', sTitle='Aliases'),
             Col(self, 'representation', sTitle='Representation')
@@ -43,6 +44,7 @@ class Graphemes(Values):
                 Col(self, 'grapheme', sTitle='Grapheme'), 
                 LinkCol(self, 'name', get_objects=lambda v:
                     v.valueset.parameter),
+                Col(self, 'bipa_grapheme', sTitle="BIPA Grapheme"),
                 Col(self, 'frequency', sTitle='Frequency'),
                 LinkCol(self, 'transcription_data', get_object=lambda v:
                     v.valueset.contribution, sTitle="Dataset"),

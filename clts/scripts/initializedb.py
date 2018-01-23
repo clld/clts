@@ -20,7 +20,7 @@ def main(args):
     data = Data()
 
     for rec in Database.from_file(
-            pkg_path('references', 'references.bib'), lowercase=False):
+            data_path('references.bib'), lowercase=False):
         source = data.add(common.Source, rec.id, _obj=bibtex2source(rec))
     
     dataset = common.Dataset(
@@ -36,7 +36,8 @@ def main(args):
             'license_icon': 'cc-by.png',
             'license_name': 'Creative Commons Attribution 4.0 International License'})
     DBSession.add(dataset)
-    for i, name in enumerate(['Johann-Mattis List', 'Cormac Anderson', 'Tiago Tresoldi', 'Robert Forkel']):
+    for i, name in enumerate(['Johann-Mattis List', 'Cormac Anderson', 'Tiago Tresoldi', 
+        'Thiago Chacon', 'Robert Forkel']):
         c = common.Contributor(id=slug(name), name=name)
         dataset.editors.append(common.Editor(contributor=c, ord=i))
 
@@ -44,18 +45,18 @@ def main(args):
             namedtuples=True)):
         if not i % 100:
             print('-', end="")
-        key = line.ID.replace(' ', '_')
+        key = line.NAME.replace(' ', '_')
         data.add(
                 models.SoundSegment,
                 key,
                 id=key,
-                name = line.ID,
+                name = line.NAME,
                 grapheme=line.GRAPHEME,
                 aliases=line.ALIASES,
-                transcription_systems=line.TRANSCRIPTION_SYSTEMS,
-                transcription_data=line.TRANSCRIPTION_DATA,
-                sound_classes=line.SOUND_CLASSES,
-                representation=int(line.REPRESENTATION or 0)
+                representation=len(line.REFLEXES.split(',')),
+                reflexes = line.REFLEXES,
+                generated = True if line.GENERATED else False,
+                unicode = line.UNICODE,
                 )
     print('')
     english = data.add(
@@ -66,33 +67,34 @@ def main(args):
 
 
     contributions = {}
-    for line in reader(pkg_path('transcriptiondata', 'transcriptiondata.tsv'),
+    for line in reader(data_path('datasets.tsv'),
             delimiter='\t', namedtuples=True):
-        contributions[line.ID] = data.add(
-                models.TranscriptionData,
-                line.ID,
-                id=line.ID,
-                name=line.ID,
-                description=line.DESCRIPTION
+        contributions[line.NAME] = data.add(
+                models.CLTSDataSet,
+                line.NAME,
+                id=line.NAME,
+                name=line.NAME,
+                description=line.DESCRIPTION,
+                datatype=line.TYPE
                 )
         for id_ in line.REFS.split(', '):
             common.ContributionReference(
                     source=data['Source'][id_],
-                    contribution=contributions[line.ID])
+                    contribution=contributions[line.NAME])
     
         
     visited = set()
     for i, line in enumerate(reader(data_path('graphemes.tsv'), delimiter="\t",
             namedtuples=True)):
         if not i % 100: print('-', end='')
-        key = line.TRANSCRIPTION_DATA + ':' + line.NAME+':'+line.GRAPHEME
+        key = line.DATASET + ':' + line.NAME+':'+line.GRAPHEME
         if key not in visited:
             sound_id = line.NAME.replace(' ', '_')
             vs = common.ValueSet(
                     id=key,
                     description=line.NAME,
                     language=english,
-                    contribution=contributions[line.TRANSCRIPTION_DATA],
+                    contribution=contributions[line.DATASET],
                     parameter=data['SoundSegment'][sound_id]
                     )
             data.add(
@@ -100,8 +102,10 @@ def main(args):
                     key,
                     id=key,
                     grapheme=line.GRAPHEME,
+                    bipa_grapheme=line.BIPA,
                     name=line.NAME,
-                    transcription_data=line.TRANSCRIPTION_DATA,
+                    dataset=line.DATASET,
+                    datatype=line.DATATYPE,
                     frequency=line.FREQUENCY or 0,
                     image=line.IMAGE,
                     url=line.URL,

@@ -2,11 +2,13 @@
 <%namespace name="util" file="../util.mako"/>
 <%! active_menu_item = "values" %>
 
-<h2>Grapheme «${ctx.grapheme}» (<i>${ctx.name}</i>) in Dataset <i>${ctx.transcription_data}</i></h2>
+<h2>Grapheme «${ctx.grapheme}» (<i>${ctx.name}</i>) in Dataset <i>${ctx.dataset}</i></h2>
 
 <dl>
-  <dt>Grapheme</dt>
-  <dd>${ctx.grapheme}</dd>
+  <dt>Data Type</dt>
+  <dd>${ctx.datatype}</dd>
+  <dt>BIPA Grapheme</dt>
+  <dd>${ctx.bipa_grapheme}</dd>
   % if ctx.url:
     <dt>URL</dt>
     <dd><a target="_blank" href="${ctx.url}">LINK</a></dd>
