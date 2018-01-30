@@ -13,9 +13,10 @@ _('Parameters')
 _('Value')
 _('Values')
 
+
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
     config = Configurator(settings=settings)
-    config.include('clld.web.app')
+    config.include('clldmpg')
     return config.make_wsgi_app()

@@ -1,10 +1,6 @@
 from setuptools import setup, find_packages
 
 
-requires = [
-    'clld',
-]
-
 setup(
     name='CLTS',
     version='0.0',
@@ -22,8 +18,25 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     zip_safe=False,
-    install_requires=requires,
-    tests_require=['mock==1.0'],
+    install_requires=[
+        "clldmpg~=3.1",
+        'markdown',
+    ],
+    extras_require={
+        'dev': ['flake8', 'waitress'],
+        'test': [
+            'psycopg2',
+            'tox',
+            'mock',
+            'pytest>=3.1',
+            'pytest-clld',
+            'pytest-mock',
+            'pytest-cov',
+            'coverage>=4.2',
+            'selenium',
+            'zope.component>=3.11.0',
+        ],
+    },
     test_suite="clts",
     entry_points="""\
     [paste.app_factory]

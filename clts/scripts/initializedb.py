@@ -1,10 +1,10 @@
 from __future__ import unicode_literals
 import sys
 
+from sqlalchemy.orm import joinedload_all
 from clld.scripts.util import initializedb, Data, bibtex2source
 from clld.db.meta import DBSession
 from clld.db.models import common
-
 from clld.lib.bibtex import Database
 
 import clts
@@ -36,84 +36,78 @@ def main(args):
             'license_icon': 'cc-by.png',
             'license_name': 'Creative Commons Attribution 4.0 International License'})
     DBSession.add(dataset)
-    for i, name in enumerate(['Johann-Mattis List', 'Cormac Anderson', 'Tiago Tresoldi', 
-        'Thiago Chacon', 'Robert Forkel']):
+    for i, name in enumerate([
+        'Johann-Mattis List',
+        'Cormac Anderson',
+        'Tiago Tresoldi',
+        'Thiago Chacon',
+        'Robert Forkel',
+    ]):
         c = common.Contributor(id=slug(name), name=name)
         dataset.editors.append(common.Editor(contributor=c, ord=i))
 
     for i, line in enumerate(reader(data_path('sounds.tsv'), delimiter='\t',
             namedtuples=True)):
-        if not i % 100:
-            print('-', end="")
+        if not i % 1000:
+            print(i)
         key = line.NAME.replace(' ', '_')
         data.add(
-                models.SoundSegment,
-                key,
-                id=key,
-                name = line.NAME,
-                grapheme=line.GRAPHEME,
-                aliases=line.ALIASES,
-                representation=len(line.REFLEXES.split(',')),
-                reflexes = line.REFLEXES,
-                generated = True if line.GENERATED else False,
-                unicode = line.UNICODE,
-                )
+            models.SoundSegment,
+            key,
+            id=key,
+            name=line.GRAPHEME,
+            description=line.NAME,
+            generated=True if line.GENERATED else False,
+            unicode=line.UNICODE,
+        )
     print('')
     english = data.add(
         common.Language, 'eng',
         id='eng',
         name='English')
 
-
-
-    contributions = {}
-    for line in reader(data_path('datasets.tsv'),
-            delimiter='\t', namedtuples=True):
-        contributions[line.NAME] = data.add(
-                models.CLTSDataSet,
-                line.NAME,
-                id=line.NAME,
-                name=line.NAME,
-                description=line.DESCRIPTION,
-                datatype=line.TYPE
-                )
+    for line in reader(data_path('datasets.tsv'), delimiter='\t', namedtuples=True):
+        c = data.add(
+            models.CLTSDataSet,
+            line.NAME,
+            id=line.NAME,
+            name=line.NAME,
+            description=line.DESCRIPTION,
+            datatype=line.TYPE
+        )
         for id_ in line.REFS.split(', '):
-            common.ContributionReference(
-                    source=data['Source'][id_],
-                    contribution=contributions[line.NAME])
-    
-        
-    visited = set()
+            common.ContributionReference(source=data['Source'][id_], contribution=c)
+
     for i, line in enumerate(reader(data_path('graphemes.tsv'), delimiter="\t",
             namedtuples=True)):
-        if not i % 100: print('-', end='')
+        if not i % 1000: print(i)
         key = line.DATASET + ':' + line.NAME+':'+line.GRAPHEME
-        if key not in visited:
+        if key not in data['Grapheme']:
             sound_id = line.NAME.replace(' ', '_')
-            vs = common.ValueSet(
+            vs = data['ValueSet'].get((line.DATASET, line.NAME))
+            if not vs:
+                vs = data.add(
+                    common.ValueSet,
+                    (line.DATASET, line.NAME),
                     id=key,
                     description=line.NAME,
                     language=english,
-                    contribution=contributions[line.DATASET],
+                    contribution=data['CLTSDataSet'][line.DATASET],
                     parameter=data['SoundSegment'][sound_id]
-                    )
+                )
             data.add(
-                    models.Grapheme,
-                    key,
-                    id=key,
-                    grapheme=line.GRAPHEME,
-                    bipa_grapheme=line.BIPA,
-                    name=line.NAME,
-                    dataset=line.DATASET,
-                    datatype=line.DATATYPE,
-                    frequency=line.FREQUENCY or 0,
-                    image=line.IMAGE,
-                    url=line.URL,
-                    valueset=vs
-                    )
-            visited.add(key)
+                models.Grapheme,
+                key,
+                id=key,
+                name=line.GRAPHEME,
+                description=line.NAME,
+                datatype=line.DATATYPE,
+                frequency=line.FREQUENCY or 0,
+                image=line.IMAGE,
+                url=line.URL,
+                valueset=vs
+            )
     print('-')
-
 
 
 def prime_cache(args):
@@ -121,6 +115,8 @@ def prime_cache(args):
     This procedure should be separate from the db initialization, because
     it will have to be run periodiucally whenever data has been updated.
     """
+    for p in DBSession.query(common.Parameter).options(joinedload_all(common.Parameter.valuesets, common.ValueSet.values)):
+        p.representation = sum(len(vs.values) for vs in p.valuesets)
 
 
 if __name__ == '__main__':

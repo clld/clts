@@ -3,13 +3,11 @@
 <%! active_menu_item = "parameters" %>
 <%block name="title">${_('Parameter')} ${ctx.name}</%block>
 
-<h2>Sound <i>${ctx.name}</i></h2>
+<h2>Sound <i>${ctx.description}</i></h2>
 
 <dl>
   <dt>Grapheme</dt>
-  <dd>${ctx.grapheme}</dd>
-  <dt>Aliases</dt>
-  <dd>${ctx.aliases}</dd>
+  <dd>${ctx.name}</dd>
 </dl>
 
 
