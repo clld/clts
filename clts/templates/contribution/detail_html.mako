@@ -9,7 +9,7 @@
     </div>
 </%def>
 
-<h2>${_('Contribution')} ${ctx.name}</h2>
+<h2>${ctx.datatype.value.capitalize()} <i>${ctx.name}</i></h2>
 
 <div class="alert-success alert">
     ${u.markdown(ctx.description)|n}

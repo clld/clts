@@ -66,8 +66,11 @@ class SoundSegmentNameCol(SoundSegmentGraphemeCol):
 class Graphemes(Values):
     def base_query(self, query):
         if self.parameter:
-            query = query.join(ValueSet).options(joinedload_all(Value.valueset))
-            return query.filter(ValueSet.parameter_pk == self.parameter.pk)
+            query = query \
+                .join(ValueSet)\
+                .join(Contribution)\
+                .options(joinedload_all(Value.valueset, ValueSet.contribution))
+            return query.filter(ValueSet.parameter_pk == self.parameter.pk).distinct()
 
         query = query\
             .join(ValueSet)\
