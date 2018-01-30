@@ -1,20 +1,22 @@
 from zope.interface import implementer
 from sqlalchemy import (
     Column,
-    String,
     Unicode,
     Integer,
     Boolean,
     ForeignKey,
-    UniqueConstraint,
 )
-from sqlalchemy.orm import relationship, backref
-from sqlalchemy.ext.declarative import declared_attr
-from sqlalchemy.ext.hybrid import hybrid_property
 
 from clld import interfaces
-from clld.db.meta import Base, CustomModelMixin
-from clld.db.models.common import Language, Value, Parameter, Contribution
+from clld.db.meta import CustomModelMixin
+from clld.db.models.common import Value, Parameter, Contribution
+from clld.util import DeclEnum
+
+
+class Datatype(DeclEnum):
+    ts = 'transcription system', ''
+    td = 'transcription data', ''
+    sc = 'sound class system', ''
 
 
 @implementer(interfaces.IParameter)
@@ -35,12 +37,11 @@ class Grapheme(CustomModelMixin, Value):
     url = Column(Unicode)
     features = Column(Unicode)
     image = Column(Unicode)
-    datatype = Column(Unicode)
     dataset = Column(Unicode)
 
 
 @implementer(interfaces.IContribution)
-class CLTSDataSet(CustomModelMixin, Contribution):
+class Transcription(CustomModelMixin, Contribution):
     pk = Column(Integer, ForeignKey('contribution.pk'), primary_key=True)
     items = Column(Integer)
-    datatype = Column(Unicode)
+    datatype = Column(Datatype.db_type())

@@ -21,6 +21,7 @@ setup(
     install_requires=[
         "clldmpg~=3.1",
         'markdown',
+        'tqdm',
     ],
     extras_require={
         'dev': ['flake8', 'waitress'],

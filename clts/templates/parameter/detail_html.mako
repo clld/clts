@@ -3,13 +3,28 @@
 <%! active_menu_item = "parameters" %>
 <%block name="title">${_('Parameter')} ${ctx.name}</%block>
 
+<%def name="sidebar()">
+    <div class="well">
+        <dl>
+            <dt>Grapheme</dt>
+            <dd>${ctx.name}</dd>
+            <dt>Unicode</dt>
+            <dd>${ctx.unicode}</dd>
+            <dt>Category</dt>
+            <dd>${ctx.description.split()[-1]}</dd>
+            <dt>Features</dt>
+            <dd>
+                <ol class="unstyled">
+                    % for f in ctx.description.split()[:-1]:
+                        <li>${f}</li>
+                    % endfor
+                </ol>
+            </dd>
+        </dl>
+    </div>
+</%def>
+
 <h2>Sound <i>${ctx.description}</i></h2>
-
-<dl>
-  <dt>Grapheme</dt>
-  <dd>${ctx.name}</dd>
-</dl>
-
 
 ${request.get_datatable('values', h.models.Value, parameter=ctx).render()}
 
