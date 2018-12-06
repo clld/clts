@@ -72,15 +72,21 @@ class Graphemes(Values):
                 .options(joinedload_all(Value.valueset, ValueSet.contribution))
             return query.filter(ValueSet.parameter_pk == self.parameter.pk).distinct()
 
-        query = query\
-            .join(ValueSet)\
-            .join(ValueSet.parameter)\
-            .options(joinedload_all(Value.valueset, ValueSet.parameter))
-
         if self.contribution:
+            query = query \
+                .join(ValueSet) \
+                .join(ValueSet.parameter) \
+                .options(joinedload_all(Value.valueset, ValueSet.parameter))
             return query.filter(ValueSet.contribution_pk == self.contribution.pk)
 
-        return query
+        return query \
+            .join(ValueSet) \
+            .join(Contribution) \
+            .join(ValueSet.parameter) \
+            .options(
+                joinedload_all(Value.valueset, ValueSet.contribution),
+                joinedload(Value.valueset, ValueSet.parameter)
+            )
 
     def col_defs(self):
         res = [Col(self, 'name', sTitle='Grapheme')]
@@ -93,12 +99,25 @@ class Graphemes(Values):
 
         if not self.contribution:
             res.extend([
-                LinkCol(self, 'transcription_data', get_object=lambda v:
-                    v.valueset.contribution, sTitle="Dataset"),
-                DatatypeCol(self, 'type', get_object=lambda v: v.valueset.contribution),
+                LinkCol(
+                    self,
+                    'transcription_data',
+                    get_object=lambda v: v.valueset.contribution,
+                    sTitle="Dataset",
+                    model_col=Contribution.id),
+                DatatypeCol(
+                    self,
+                    'type',
+                    get_object=lambda v: v.valueset.contribution,
+                    **({} if self.parameter else {'sFilter': 'transcription system'})),
             ])
         res.append(URLCol(self, 'url', sTitle="URL"))
         return res
+
+    def get_options(self):
+        if self.parameter:
+            return {'aaSorting': [[2, 'asc'], [1, 'asc']]}
+        return {}
 
 
 class RefsCol(Col):
@@ -134,6 +153,9 @@ class Datasets(Contributions):
             #Col(self, 'description', sTitle='Description', sType='html', format=lambda i: markdown(i.description)),
             RefsCol(self, 'sources'),
         ]
+
+    def get_options(self):
+        return {'aaSorting': [[2, 'asc'], [1, 'asc']]}
 
 
 def includeme(config):

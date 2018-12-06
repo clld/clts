@@ -22,6 +22,7 @@ setup(
         "clldmpg~=3.1",
         'markdown',
         'tqdm',
+        'pyclts',
     ],
     extras_require={
         'dev': ['flake8', 'waitress'],

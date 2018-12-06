@@ -11,14 +11,24 @@ from clld.lib.bibtex import Database
 import clts
 from clts import models
 
-from pyclts.util import data_path
+from pyclts.api import CLTS
 from clldutils.dsv import reader
 from clldutils.misc import slug
+from clldutils.path import Path
+
+
+def data_path(*comps):
+    repos = Path(__file__).parent.parent.parent.resolve() / '..' / '..' / 'cldf' / 'clts'
+    return CLTS(repos).data_path(*comps)
 
 
 def iterrows(what):
+    comps = []
+    if what == 'index':
+        comps = ['..', 'sources']
+    comps.append('{0}.tsv'.format(what))
     return tqdm(
-        reader(data_path('{0}.tsv'.format(what)), delimiter='\t', namedtuples=True),
+        reader(data_path(*comps), delimiter='\t', namedtuples=True),
         desc='loading {0}'.format(what))
 
 
@@ -45,7 +55,6 @@ def main(args):
         'Johann-Mattis List',
         'Cormac Anderson',
         'Tiago Tresoldi',
-        'Thiago Chacon',
         'Robert Forkel',
     ]):
         c = common.Contributor(id=slug(name), name=name)
@@ -68,7 +77,7 @@ def main(args):
         id='eng',
         name='English')
 
-    for line in iterrows('datasets'):
+    for line in iterrows('index'):
         c = data.add(
             models.Transcription,
             line.NAME,
@@ -86,15 +95,19 @@ def main(args):
             sound_id = line.NAME.replace(' ', '_')
             vs = data['ValueSet'].get((line.DATASET, line.NAME))
             if not vs:
-                vs = data.add(
-                    common.ValueSet,
-                    (line.DATASET, line.NAME),
-                    id=key,
-                    description=line.NAME,
-                    language=english,
-                    contribution=data['Transcription'][line.DATASET],
-                    parameter=data['SoundSegment'][sound_id]
-                )
+                try:
+                    vs = data.add(
+                        common.ValueSet,
+                        (line.DATASET, line.NAME),
+                        id=key,
+                        description=line.NAME,
+                        language=english,
+                        contribution=data['Transcription'][line.DATASET],
+                        parameter=data['SoundSegment'][sound_id]
+                    )
+                except:
+                    print(line)
+                    raise
             data.add(
                 models.Grapheme,
                 key,
