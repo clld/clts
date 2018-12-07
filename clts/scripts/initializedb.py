@@ -55,6 +55,8 @@ def main(args):
         'Johann-Mattis List',
         'Cormac Anderson',
         'Tiago Tresoldi',
+        'Christoph Rzymski',
+        'Simon Greenhill',
         'Robert Forkel',
     ]):
         c = common.Contributor(id=slug(name), name=name)

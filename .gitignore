@@ -98,3 +98,5 @@ ENV/
 
 # pycharm
 .idea
+.pytest_cache
+

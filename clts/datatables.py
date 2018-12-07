@@ -94,7 +94,6 @@ class Graphemes(Values):
             res.extend([
                 SoundSegmentGraphemeCol(self, 'bipa_grapheme', model_col=Parameter.name, sTitle="BIPA Grapheme"),
                 SoundSegmentNameCol(self, 'name', model_col=Parameter.description),
-                Col(self, 'frequency', sTitle='Frequency'),
             ])
 
         if not self.contribution:
