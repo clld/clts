@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from sqlalchemy.orm import aliased, joinedload, joinedload_all
 from purl import URL
 
