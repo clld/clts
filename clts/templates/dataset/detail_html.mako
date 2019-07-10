@@ -52,8 +52,5 @@
     and the paper introducing CLTS as
 </p>
 <blockquote>
-    Anderson, C., T. Tresoldi, T. Chacon, A.-M. Fehn, M. Walworth, R.
-    Forkel, and J.-M. List (forthcoming): A Cross-Linguistic Database of
-    Phonetic Transcription Systems. Yearbook of the Poznań Linguistic
-    Meeting. 1-27.
+Anderson, Cormac, Tiago Tresoldi, Thiago C. Chacon, Anne-Maria Fehn, Mary Walworth, Robert Forkel, and Johann-Mattis List (2018): A Cross-Linguistic Database of Phonetic Transcription Systems. Yearbook of the Poznań Linguistic Meeting 4.1. 21-53. DOI: 10.2478/yplm-2018-0002 
 </blockquote>
