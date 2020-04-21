@@ -1,20 +1,18 @@
-from sqlalchemy.orm import aliased, joinedload, joinedload_all
+from sqlalchemy.orm import joinedload
 from purl import URL
 
-from clld.web.datatables.base import Col, LinkCol, IdCol, DetailsRowLinkCol, IntegerIdCol
-from clld.web.datatables.contribution import Contributions, ContributorsCol
+from clld.web.datatables.base import Col, LinkCol, DetailsRowLinkCol
+from clld.web.datatables.contribution import Contributions
 from clld.web.datatables.contributor import Contributors, NameCol, ContributionsCol
 from clld.web.datatables.parameter import Parameters
 from clld.web.datatables.value import Values
 from clld.web.util.helpers import linked_references, external_link
 from clld.db.models.common import (
     Value, Value_data, ValueSet, Parameter, Contribution, ContributionContributor,
-    ContributionReference,
 )
 from clld.db.util import get_distinct_values
 
 from clts.models import SoundSegment, Grapheme, Transcription, Datatype
-from clts.util import markdown
 
 
 class Authors(Contributors):
@@ -67,14 +65,14 @@ class Graphemes(Values):
             query = query \
                 .join(ValueSet)\
                 .join(Contribution)\
-                .options(joinedload_all(Value.valueset, ValueSet.contribution))
+                .options(joinedload(Value.valueset).joinedload(ValueSet.contribution))
             return query.filter(ValueSet.parameter_pk == self.parameter.pk).distinct()
 
         if self.contribution:
             query = query \
                 .join(ValueSet) \
                 .join(ValueSet.parameter) \
-                .options(joinedload_all(Value.valueset, ValueSet.parameter))
+                .options(joinedload(Value.valueset).joinedload(ValueSet.parameter))
             return query.filter(ValueSet.contribution_pk == self.contribution.pk)
 
         return query \
@@ -82,7 +80,7 @@ class Graphemes(Values):
             .join(Contribution) \
             .join(ValueSet.parameter) \
             .options(
-                joinedload_all(Value.valueset, ValueSet.contribution),
+                joinedload(Value.valueset).joinedload(ValueSet.contribution),
                 joinedload(Value.valueset, ValueSet.parameter)
             )
 

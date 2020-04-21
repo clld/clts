@@ -19,8 +19,9 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        "clldmpg~=3.1",
-        "clldutils>=2.7",
+        "clld>=6",
+        "clldmpg>=3.5",
+        "clldutils>=3.5",
         'markdown',
         'tqdm',
         'pyclts',

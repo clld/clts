@@ -1,7 +1,8 @@
 import sys
+from pathlib import Path
 
 from tqdm import tqdm
-from sqlalchemy.orm import joinedload_all
+from sqlalchemy.orm import joinedload
 from clld.scripts.util import initializedb, Data, bibtex2source
 from clld.db.meta import DBSession
 from clld.db.models import common
@@ -10,9 +11,8 @@ from clld.lib.bibtex import Database
 from clts import models
 
 from pyclts.api import CLTS
-from clldutils.dsv import reader
+from csvw.dsv import reader
 from clldutils.misc import slug
-from clldutils.path import Path
 from clldutils.apilib import assert_release
 
 
@@ -125,11 +125,11 @@ def prime_cache(args):  # pragma: no cover
     it will have to be run periodiucally whenever data has been updated.
     """
     for p in DBSession.query(common.Parameter) \
-            .options(joinedload_all(common.Parameter.valuesets, common.ValueSet.values)):
+            .options(joinedload(common.Parameter.valuesets).joinedload(common.ValueSet.values)):
         p.representation = sum(len(vs.values) for vs in p.valuesets)
 
     for p in DBSession.query(common.Contribution)\
-            .options(joinedload_all(common.Contribution.valuesets, common.ValueSet.values)):
+            .options(joinedload(common.Contribution.valuesets).joinedload(common.ValueSet.values)):
         p.items = sum(len(vs.values) for vs in p.valuesets)
 
 
