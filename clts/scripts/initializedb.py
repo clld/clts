@@ -58,6 +58,15 @@ def main(args):  # pragma: no cover
             value=line['VALUE'],
         )
 
+    DBSession.add(models.SoundSegment(
+        id='NA',
+        name='<NA>',
+        description='<NA>',
+        type='marker',
+        generated=True,
+        unicode='',
+        color='#bbbbbb',
+    ))
     for line in args.cldf['data/sounds.tsv']:
         s = data.add(
             models.SoundSegment,

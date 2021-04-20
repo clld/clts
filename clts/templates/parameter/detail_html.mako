@@ -26,6 +26,13 @@
 
 <h2>Sound <i>${ctx.description}</i></h2>
 
-${request.get_datatable('values', h.models.Value, parameter=ctx).render()}
+% if ctx.id == 'NA':
+    <div class="alert alert-info">
+        This marker is provided to support linking "unknown" sounds (i.e. sounds that can not be mapped to
+        a sound in the BIPA transcription system) to CLTS.
+    </div>
+% else:
+    ${request.get_datatable('values', h.models.Value, parameter=ctx).render()}
+% endif
 
 
