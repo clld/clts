@@ -1,17 +1,11 @@
 <%inherit file="../home_comp.mako"/>
+<%namespace name="clts_util" file="../clts_util.mako"/>
 
 <%def name="sidebar()">
     <div style="margin-bottom: 20px; margin-top: 20px; text-align: center">
         <img src="${req.static_url('clts:static/logo/clts2.png')}"/>
     </div>
-    <div class="well">
-        <p>
-            This application serves the latest
-            ${h.external_link('https://github.com/cldf/clts/releases', label='released version of the CLTS data')},
-            which is curated in the GitHub repository
-            ${h.external_link('https://github.com/cldf/clts', label='cldf/clts')}.
-        </p>
-    </div>
+        ${clts_util.download_info()}
 </%def>
 
 <h2>CLTS</h2>
@@ -35,18 +29,19 @@
     systems (CLTS) currently registers
     <a href="${req.route_url('contributions', _query=dict(sSearch_2='transcription system'))}">5 transcription systems</a>
     and links to
-    <a href="${req.route_url('contributions', _query=dict(sSearch_2='transcription data'))}">15 different transcription datasets</a>,
+    <a href="${req.route_url('contributions', _query=dict(sSearch_2='transcription data'))}">22 different transcription datasets</a>,
     in addition to mapping the sounds to
-    <a href="${req.route_url('contributions', _query=dict(sSearch_2='sound class system'))}">7 different sound class systems</a>.
+    <a href="${req.route_url('contributions', _query=dict(sSearch_2='sound class system'))}">6 different sound class systems</a>.
 </p>
 <p>
     Cite the database as
 </p>
 <blockquote>
-    Johann-Mattis List, Cormac Anderson, Tiago Tresoldi, Simon J. Greenhill, Christoph Rzymski, & Robert Forkel.
-    (2019). Cross-Linguistic Transcription Systems (Version v1.2.0).
-    Max Planck Institute for the Science of Human History: Jena
-    <a href="https://doi.org/10.5281/zenodo.2633838"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.2633838.svg" alt="DOI"></a>
+    Johann-Mattis List, Cormac Anderson, Tiago Tresoldi, & Robert Forkel.
+    (2021). Cross-Linguistic Transcription Systems (Version v2.1.0).
+    [Data set]. Zenodo. http://doi.org/10.5281/zenodo.4705149
+    <br>
+    <a href="https://doi.org/10.5281/zenodo.4705149"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.4705149.svg" alt="DOI"></a>
 </blockquote>
 <p>
     and the paper introducing CLTS as

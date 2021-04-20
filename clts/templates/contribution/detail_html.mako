@@ -4,6 +4,9 @@
 
 <%def name="sidebar()">
     <div class="well">
+        <h3>Description</h3>
+        ${u.markdown(ctx.description)|n}
+
         <h3>Sources</h3>
         ${h.linked_references(req, ctx)|n}
     </div>
@@ -11,11 +14,6 @@
 
 <h2>${ctx.datatype.value.capitalize()} <i>${ctx.name}</i></h2>
 
-<div class="alert-success alert">
-    ${u.markdown(ctx.description)|n}
-</div>
-
-${util.data()}
 
 <% dt = request.get_datatable('values', h.models.Value, contribution=ctx) %>
 % if dt:

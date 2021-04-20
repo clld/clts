@@ -15,8 +15,8 @@
             <dt>Features</dt>
             <dd>
                 <ol class="unstyled">
-                    % for f in ctx.description.split()[:-1]:
-                        <li>${f}</li>
+                    % for f in ctx.features:
+                        <li>${h.link(req, f, label='{}: {}'.format(f.feature, f.value))}</li>
                     % endfor
                 </ol>
             </dd>
