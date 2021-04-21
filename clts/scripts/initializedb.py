@@ -22,7 +22,7 @@ def main(args):  # pragma: no cover
     print(clts_repos.repos)
     version = 'v2.1.0' # assert_release(clts_repos.repos)
 
-    for rec in Database.from_file(args.cldf.bibpath, lowercase=False):
+    for rec in Database.from_file(args.cldf.bibpath, lowercase=True):
         data.add(common.Source, rec.id, _obj=bibtex2source(rec))
 
     dataset = common.Dataset(
