@@ -19,8 +19,8 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        "clldmpg>=4.1",
-        "clld>=6",
+        "clldmpg>=4.2",
+        "clld>=8",
         "clldutils>=3.5",
         'markdown',
         'tqdm',
