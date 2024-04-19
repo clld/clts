@@ -8,6 +8,7 @@ from clld.web.datatables.parameter import Parameters
 from clld.web.datatables.value import Values
 from clld.web.util.helpers import linked_references, external_link
 from clld.web.util.htmllib import HTML
+from clld.db.meta import DBSession
 from clld.db.models.common import Value, ValueSet, Parameter, Contribution, ContributionContributor
 from clld.db.util import get_distinct_values
 
@@ -136,7 +137,12 @@ class Graphemes(Values):
             )
 
     def col_defs(self):
-        res = [Col(self, 'name', sTitle='Grapheme')]
+        if self.contribution and self.contribution.datatype == Datatype.sc:
+            res = [Col(
+                self, 'name', sTitle='Grapheme', 
+                choices=[r[0] for r in DBSession.query(Value.name).join(ValueSet).filter(ValueSet.contribution == self.contribution).distinct()])]
+        else: 
+            res = [Col(self, 'name', sTitle='Grapheme')]
         if not self.parameter:
             res.extend([
                 SoundSegmentGraphemeCol(self, 'bipa_grapheme', model_col=Parameter.name, sTitle="BIPA Grapheme"),

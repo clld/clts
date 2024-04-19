@@ -8,7 +8,7 @@ ${clts_util.download_info()}
 <div class="alert-info alert">
     <p>
         All released versions are also available at
-        ${h.external_link('https://doi.org/10.5281/zenodo.1617697', label='DOI 10.5281/zenodo.1617697')}
+        ${h.external_link('https://doi.org/10.5281/zenodo.3515744', label='DOI 10.5281/zenodo.3515744')}
         on ZENODO.
     </p>
     <p>

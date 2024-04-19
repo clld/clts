@@ -37,11 +37,11 @@
     Cite the database as
 </p>
 <blockquote>
-    Johann-Mattis List, Cormac Anderson, Tiago Tresoldi, & Robert Forkel.
-    (2021). Cross-Linguistic Transcription Systems (Version v2.1.0).
-    [Data set]. Zenodo. http://doi.org/10.5281/zenodo.4705149
+    Johann-Mattis List, Cormac Anderson, Tiago Tresoldi, Christoph Rzymski, & Robert Forkel.
+    (2024). CLTS. Cross-Linguistic Transcription Systems (v2.3.0) [Data set].
+    Zenodo. https://doi.org/10.5281/zenodo.10997741
     <br>
-    <a href="https://doi.org/10.5281/zenodo.4705149"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.4705149.svg" alt="DOI"></a>
+    <a href="https://doi.org/10.5281/zenodo.10997741"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.10997741.svg" alt="DOI"></a>
 </blockquote>
 <p>
     and the paper introducing CLTS as
