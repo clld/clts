@@ -137,7 +137,7 @@ def main(args):  # pragma: no cover
                 id=key,
                 name=line['GRAPHEME'],
                 description=line['NAME'],
-                url=line['URL'].unsplit() if line['URL'] else None,
+                url=line['URL'] if line['URL'] else None,
                 audio=sound_url_template.expand(line) if line['SOUND'] else None,
                 image=image_url_template.expand(line) if line['IMAGE'] else None,
                 valueset=vs

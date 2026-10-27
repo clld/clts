@@ -8,12 +8,25 @@ cd clts
 pip install -e .[test]
 ```
 
-
 1. Load the data from cldf-clts/clts:
    ```shell
    clld initdb development.ini --cldf ../clts-data/cldf-metadata.json
    ```
 2. Adapt the citation on the landing page.
 3. Run the tests `pytest`.
-4. Deploy to server.
+   ```shell
+   pytest
+   ```
+
+Store the tested requirements:
+```shell
+pip freeze > requirements.txt
+```
+
+Store a db dump:
+```shell
+pg_dump -xO clts > clts.sql
+zip clts.sql.zip clts.sql
+rm clts.sql
+```
 
