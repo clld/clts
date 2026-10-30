@@ -19,7 +19,6 @@ def main(args):  # pragma: no cover
     data = Data()
     clts_repos = Path(__file__).parent.parent.parent.parent.resolve() / 'clts-data'
     clts_repos = CLTS(clts_repos)
-    print(clts_repos.repos)
     version = assert_release(clts_repos.repos)
 
     for rec in Database.from_file(args.cldf.bibpath, lowercase=True):
